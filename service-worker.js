@@ -1,23 +1,18 @@
 
-const CACHE_NAME = 'radio-buenos-tiempos-cache-v1';
+const CACHE_NAME = 'radio-buenos-tiempos-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg'
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
-});
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
@@ -27,6 +22,14 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))
       );
+    })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
     })
   );
 });

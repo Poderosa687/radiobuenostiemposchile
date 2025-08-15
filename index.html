@@ -1720,5 +1720,90 @@ window.addEventListener('resize', ajustarEscala);
 window.addEventListener('load', ajustarEscala);
 </script>
 
+
+<!-- POPUP DE INSTALACIÓN ADAPTATIVO -->
+<div id="installPrompt" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  z-index: 10000;
+  display: none;
+">
+  <h3 style="margin-bottom: 10px;">Instala Nuestra Aplicación</h3>
+  <p style="font-size: 14px; line-height: 1.5;">
+    Disfruta nuestra radio directamente en tu dispositivo, sin necesidad de abrir el navegador.
+  </p>
+  <button id="installAction" style="
+    margin-top: 15px;
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  ">
+    <img id="installIcon" src="" alt="icon" style="height: 20px; width: 20px;"> 
+    <span id="installText"></span>
+  </button>
+</div>
+
+<script>
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const promptDiv = document.getElementById("installPrompt");
+  const installText = document.getElementById("installText");
+  const installIcon = document.getElementById("installIcon");
+
+  // Detectar dispositivo y cambiar texto/icono
+  if (/android/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Android";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg";
+    document.getElementById("installAction").style.background = "#3ddc84";
+    document.getElementById("installAction").style.color = "white";
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en iPhone";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg";
+    document.getElementById("installAction").style.background = "#000000";
+    document.getElementById("installAction").style.color = "white";
+  } else if (/windows/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Windows";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg";
+    document.getElementById("installAction").style.background = "#0078d7";
+    document.getElementById("installAction").style.color = "white";
+  } else {
+    installText.textContent = "Instalar Aplicación";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/6/6a/Chrome_Logo.svg";
+    document.getElementById("installAction").style.background = "#ffffff";
+    document.getElementById("installAction").style.color = "black";
+  }
+
+  promptDiv.style.display = "block";
+
+  document.getElementById("installAction").onclick = async () => {
+    promptDiv.style.display = "none";
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") {
+      console.log("Instalación aceptada");
+    }
+    deferredPrompt = null;
+  };
+});
+</script>
 </body>
 </html>
