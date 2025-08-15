@@ -1,0 +1,21 @@
+{
+  "name": "RADIO BUENOS TIEMPOS",
+  "short_name": "Buenos Tiempos",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "red",
+  "description": "Escucha la mejor m\u00fasica del recuerdo",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

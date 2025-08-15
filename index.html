@@ -1,0 +1,1724 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<link rel="icon" type="image/png" href="https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg"/>
+<meta name="theme-color" content="red">
+
+<link href="manifest.json" rel="manifest"/>
+<script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById("installBtn");
+      if (btn) btn.style.display = "block";
+    });
+
+    function installApp() {
+      const btn = document.getElementById("installBtn");
+      btn.style.display = "none";
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+      });
+    }
+  </script>
+<link href="manifest.json" rel="manifest"/>
+<meta content="#28a745" name="theme-color"/>
+<script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
+        console.log("Service Worker registrado:", reg);
+      }).catch(function(err) {
+        console.log("Error al registrar Service Worker:", err);
+      });
+    }
+  </script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RADIO BUENOS TIEMPOS</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: none;
+      color: white;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      justify-content: space-between;
+      padding: 20px;
+      position: relative;
+    }
+    .logo {
+      width: 270px;
+      height: 270px;
+      border-radius: 50%;
+      background: none;
+      overflow: hidden;
+      margin-top: 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .player-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #e91e63;
+      color: white;
+      border: none;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .socials {
+      position: absolute;
+      right: 15px;
+      top: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .socials a {
+      width: 40px;
+      height: 40px;
+      background: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      text-decoration: none;
+    }
+    .now-playing {
+      width: 100%;
+      background: #111;
+      padding: 15px;
+      text-align: center;
+      font-size: 15px;
+    }
+  
+.video-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 0;
+}
+.video-fondo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+}
+
+
+
+.video-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -3;
+  
+}
+.video-bottom video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.6965);
+  transform-origin: center top;
+  
+}
+
+
+.video-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -3;
+  
+}
+.video-top video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+}
+
+
+overlay-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  background: linear-gradient(to bottom, rgba(0, 85, 170, 0.3), rgba(0, 85, 170, 0.05));
+  z-index: -2;
+}
+
+
+overlay-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  background: linear-gradient(to bottom, rgba(255, 105, 180, 0.75), rgba(255, 20, 147, 0.65));
+  z-index: -2;
+}
+
+@keyframes wave {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05) rotate(-2deg); }
+  100% { transform: scale(1); }
+}
+.logo {
+  animation: wave 2.5s infinite ease-in-out;
+}
+
+.logo::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  animation: ripple 2s infinite;
+  z-index: 1;
+}
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.8; }
+  70% { transform: scale(1.5); opacity: 0.2; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+
+.logo {
+  
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.envivo {
+  animation: parpadeo 1s infinite;
+}
+
+@keyframes fade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.frase-rotativa span {
+  animation: fade 3s ease-in-out infinite;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+    .social-btn {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .social-btn:hover {
+      transform: scale(1.2) rotate(5deg);
+      opacity: 0.85;
+    }
+    .social-btn:nth-child(1) { animation: pop 0.6s ease-out forwards; animation-delay: 0.2s; }
+    .social-btn:nth-child(2) { animation: pop 0.6s ease-out forwards; animation-delay: 0.4s; }
+    .social-btn:nth-child(3) { animation: pop 0.6s ease-out forwards; animation-delay: 0.6s; }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+.social-bar a {
+  opacity: 0;
+  transform: translateX(50px) scale(0.6);
+  animation: socialEnter 0.5s ease-out forwards;
+}
+.social-bar a:nth-child(1) { animation-delay: 0.1s; }
+.social-bar a:nth-child(2) { animation-delay: 0.2s; }
+.social-bar a:nth-child(3) { animation-delay: 0.3s; }
+.social-bar a:nth-child(4) { animation-delay: 0.4s; }
+.social-bar a:nth-child(5) { animation-delay: 0.5s; }
+
+.social-bar a:hover {
+  transform: scale(1.2) rotate(-5deg);
+  transition: transform 0.3s ease;
+  opacity: 0.9;
+}
+
+@keyframes socialEnter {
+  0% {
+    opacity: 0;
+    transform: translateX(50px) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+
+  50% { height: 22px; }
+}
+
+
+
+
+
+}
+
+
+.ecualizador .barra {
+  width: 4px;
+  background: white;
+  animation: bounce 1s infinite ease-in-out;
+  transform-origin: bottom;
+  
+}
+
+.ecualizador .barra:nth-child(1) { animation-duration: 0.45s; height: 14px; }
+.ecualizador .barra:nth-child(2) { animation-duration: 0.35s; height: 22px; }
+.ecualizador .barra:nth-child(3) { animation-duration: 0.55s; height: 18px; }
+.ecualizador .barra:nth-child(4) { animation-duration: 0.4s;  height: 25px; }
+.ecualizador .barra:nth-child(5) { animation-duration: 0.5s;  height: 20px; }
+
+@keyframes bounce {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.8); }
+}
+
+
+.ecualizador .barra {
+  width: 5px;
+  background: white;
+  animation: bounce 1s infinite ease-in-out;
+  transform-origin: bottom;
+  
+}
+
+.ecualizador .barra:nth-child(1) { animation-duration: 0.45s; height: 12px; }
+.ecualizador .barra:nth-child(2) { animation-duration: 0.4s;  height: 18px; }
+.ecualizador .barra:nth-child(3) { animation-duration: 0.5s;  height: 10px; }
+.ecualizador .barra:nth-child(4) { animation-duration: 0.6s;  height: 24px; }
+.ecualizador .barra:nth-child(5) { animation-duration: 0.45s; height: 14px; }
+.ecualizador .barra:nth-child(6) { animation-duration: 0.4s;  height: 20px; }
+.ecualizador .barra:nth-child(7) { animation-duration: 0.55s; height: 16px; }
+.ecualizador .barra:nth-child(8) { animation-duration: 0.5s;  height: 22px; }
+
+@keyframes bounce {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.7); }
+}
+
+
+.ecualizador .barra:nth-child(9)  { animation-duration: 0.6s; height: 28px; }
+.ecualizador .barra:nth-child(10) { animation-duration: 0.45s; height: 18px; }
+.ecualizador .barra:nth-child(11) { animation-duration: 0.5s; height: 26px; }
+.ecualizador .barra:nth-child(12) { animation-duration: 0.4s; height: 16px; }
+.ecualizador .barra:nth-child(13) { animation-duration: 0.65s; height: 24px; }
+.ecualizador .barra:nth-child(14) { animation-duration: 0.35s; height: 22px; }
+.ecualizador .barra:nth-child(15) { animation-duration: 0.5s; height: 14px; }
+.ecualizador .barra:nth-child(16) { animation-duration: 0.45s; height: 20px; }
+
+.ecualizador .barra:nth-child(17) { animation-duration: 0.6s; height: 23px; }
+.ecualizador .barra:nth-child(18) { animation-duration: 0.35s; height: 26px; }
+.ecualizador .barra:nth-child(19) { animation-duration: 0.4s; height: 29px; }
+.ecualizador .barra:nth-child(20) { animation-duration: 0.45s; height: 12px; }
+.ecualizador .barra:nth-child(21) { animation-duration: 0.5s; height: 15px; }
+.ecualizador .barra:nth-child(22) { animation-duration: 0.55s; height: 18px; }
+.ecualizador .barra:nth-child(23) { animation-duration: 0.6s; height: 21px; }
+.ecualizador .barra:nth-child(24) { animation-duration: 0.35s; height: 24px; }
+.ecualizador .barra:nth-child(25) { animation-duration: 0.4s; height: 27px; }
+.ecualizador .barra:nth-child(26) { animation-duration: 0.45s; height: 30px; }
+.ecualizador .barra:nth-child(27) { animation-duration: 0.5s; height: 13px; }
+.ecualizador .barra:nth-child(28) { animation-duration: 0.55s; height: 16px; }
+.ecualizador .barra:nth-child(29) { animation-duration: 0.6s; height: 19px; }
+.ecualizador .barra:nth-child(30) { animation-duration: 0.35s; height: 22px; }
+.ecualizador .barra:nth-child(31) { animation-duration: 0.4s; height: 25px; }
+.ecualizador .barra:nth-child(32) { animation-duration: 0.45s; height: 28px; }
+
+
+.ecualizador.paused .barra {
+  animation-play-state: paused;
+}
+
+.ecualizador.active .barra {
+  animation-play-state: running;
+}
+
+
+.ecualizador .barra {
+  animation-play-state: paused;
+}
+
+.ecualizador.active .barra {
+  animation-play-state: running !important;
+}
+
+
+/* Estilo por defecto */
+.ecualizador .barra {
+  animation-play-state: paused;
+  transform-origin: bottom;
+  width: 5px;
+  background: white;
+}
+
+/* Estilo más alto */
+.ecualizador.estilo-alto .barra {
+  height: 30px !important;
+}
+
+/* Estilo original */
+.ecualizador.estilo-normal .barra {
+  height: 20px !important;
+}
+
+/* Animación activa solo cuando tiene .active */
+.ecualizador.active .barra {
+  animation-play-state: running !important;
+}
+
+
+@keyframes girar-y-parar {
+  0%   { transform: rotate(0deg); }
+  80%  { transform: rotate(360deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.logo {
+  animation: girar-y-parar 4s ease-in-out infinite;
+}
+
+
+.ondas-circulares {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.ondas-circulares span {
+  position: absolute;
+  border: 4px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  animation: ondaExpandir 2.5s ease-out infinite;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.ondas-circulares span:nth-child(2) {
+  animation-delay: 0.8s;
+}
+.ondas-circulares span:nth-child(3) {
+  animation-delay: 1.6s;
+}
+
+@keyframes ondaExpandir {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 4px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+  animation-delay: 0.9s;
+}
+  animation-delay: 1.8s;
+}
+
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}@keyframes palpitar {0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); }}
+
+/* Escalado automático en celulares */
+html {
+  font-size: calc(12px + 0.5vw);
+}
+
+
+
+@media (min-width: 500px) and (max-width: 768px) {
+  body {
+    transform: scale(1.05);
+    transform-origin: top center;
+  }
+}
+
+/* Ajustes para que no se corte nada en pantallas pequeñas */
+@media (max-width: 768px) {
+  .logo { width: 55vw; height: 55vw; margin-top: 5vh; }
+  .player-btn { width: 22vw; height: 22vw; font-size: 8vw; top: auto; bottom: 20vh; left: 50%; transform: translateX(-50%); }
+  .envivo { font-size: 3vw; padding: 0.5em 1em; }
+  h1 { font-size: 4vw; }
+  .frase-rotativa { font-size: 3.5vw; }
+  #metadata { width: 95vw; font-size: 3vw; bottom: 8vh; }
+  #sideMenu { width: 80vw; }
+}
+
+
+/* Bloque flotante acrílico de instalación */
+#installContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 10000;
+}
+
+#installContainer p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#installBtn {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+#installBtn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+#installBtn img {
+  height: 20px;
+  width: 20px;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+.container {
+  min-height: 100vh;
+  width: 100vw;
+}
+@supports (-webkit-touch-callout: none) {
+  .container {
+    min-height: -webkit-fill-available;
+  }
+}
+</style>
+<script>
+  document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+  });
+  document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+  });
+  document.addEventListener("dragstart", function(e) {
+    e.preventDefault();
+  });
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+</head>
+<body
+
+<!-- Botón menú arriba izquierda -->
+<button id="menuBtn" style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1000;
+">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+  </svg>
+</button>
+
+<!-- Menú lateral estilo Super Mix -->
+<div id="sideMenu" style="
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  background: white;
+  color: black;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 99999;
+  font-family: Arial, sans-serif;
+">
+  <!-- Logo -->
+  <div style="margin:0; padding:0;"><img src="https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg" alt="Logo" style="width: 100%; height: auto; display: block; animation: palpitar 1.5s infinite ease-in-out;"></div>
+
+  <!-- Opciones principales -->
+  <div style="padding: 10px 0;">
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fas fa-envelope"></i> Hable con nosotros
+    </a>
+    <a href="https://lachizzma.com/quienessomos" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fas fa-home"></i> Acerca de
+    </a>
+  </div>
+
+  <!-- Redes sociales -->
+  <div style="padding: 10px 20px; font-size:12px; color:gray; text-transform:uppercase; font-weight:bold;">Redes Sociales</div>
+  <div>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fab fa-facebook" style="color:#1877f2;"></i> Facebook
+    </a>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fab fa-instagram" style="color:#e1306c;"></i> Instagram
+    </a>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fab fa-twitter" style="color:#1da1f2;"></i> Twitter
+    </a>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <a href="https://wa.me/56977974306" target="_blank" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</a>
+  </div>
+
+  <!-- Más información -->
+  <div style="padding: 10px 20px; font-size:12px; color:gray; text-transform:uppercase; font-weight:bold;">Más información</div>
+  <div>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fas fa-star" style="color:#f4b400;"></i> Nos califica
+    </a>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fas fa-share-alt"></i> Compartir
+    </a>
+    <a href="#" style="display:flex; align-items:center; gap:10px; padding: 12px 20px; color:black; text-decoration:none; font-size:16px;">
+      <i class="fas fa-file-alt"></i> Términos y Políticas
+    </a>
+  </div>
+
+  <!-- Botón Perú Play -->
+  <div style="padding: 20px; text-align: center;">
+    <button style="padding: 10px 20px; border:2px solid black; border-radius:50px; background:none; font-size:18px; font-weight:bold; display:flex; align-items:center; gap:8px; cursor:pointer;">
+      <i class="fas fa-play"></i> Perú Play
+    </button>
+  </div>
+</div>
+
+<!-- Fondo oscuro -->
+<div id="menuOverlay" style="
+  display:none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 99998;
+"></div>
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const sideMenu = document.getElementById("sideMenu");
+  const closeOverlay = document.getElementById("menuOverlay");
+
+  menuBtn.addEventListener("click", () => {
+    sideMenu.style.left = "0";
+    closeOverlay.style.display = "block";
+  });
+
+  closeOverlay.addEventListener("click", () => {
+    sideMenu.style.left = "-300px";
+    closeOverlay.style.display = "none";
+  });
+</script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+ style="margin: 0; padding: 0; background: none !important;">
+<!-- Botón menú arriba izquierda -->
+
+<!-- Menú lateral -->
+
+
+
+<audio autoplay="" crossorigin="anonymous" id="radio" style="display:none;">
+<source src="https://sonic.mallocohosting.cl/8054/stream" type="audio/mpeg"/>
+</audio>
+
+<div class="fondo-imagen-diagonal" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('https://i.postimg.cc/pX3Mwkt9/Picsart-25-08-14-11-53-13-420.png') no-repeat center -125px;
+    background-size: cover;
+    z-index: 0;
+    pointer-events: none;
+"></div>
+
+
+<!-- POPUP DE INSTALACIÓN ADAPTATIVO -->
+<div id="installPrompt" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  z-index: 10000;
+  display: none;
+">
+  <h3 style="margin-bottom: 10px;">Instala Nuestra Aplicación</h3>
+  <p style="font-size: 14px; line-height: 1.5;">
+    Disfruta nuestra radio directamente en tu dispositivo, sin necesidad de abrir el navegador.
+  </p>
+  <button id="installAction" style="
+    margin-top: 15px;
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  ">
+    <img id="installIcon" src="" alt="icon" style="height: 20px; width: 20px;"> 
+    <span id="installText"></span>
+  </button>
+</div>
+
+<script>
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const promptDiv = document.getElementById("installPrompt");
+  const installText = document.getElementById("installText");
+  const installIcon = document.getElementById("installIcon");
+
+  // Detectar dispositivo y cambiar texto/icono
+  if (/android/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Android";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg";
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en iPhone";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg";
+  } else if (/windows/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Windows";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg";
+  } else {
+    installText.textContent = "Instalar Aplicación";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/6/6a/Chrome_Logo.svg";
+  }
+
+  // Cambiar color de botón según dispositivo
+  const btn = document.getElementById("installAction");
+  if (/android/i.test(navigator.userAgent)) {
+    btn.style.background = "#3ddc84"; // Verde Android
+    btn.style.color = "white";
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    btn.style.background = "#000000"; // Negro Apple
+    btn.style.color = "white";
+  } else if (/windows/i.test(navigator.userAgent)) {
+    btn.style.background = "#0078d7"; // Azul Windows
+    btn.style.color = "white";
+  } else {
+    btn.style.background = "#ffffff"; // Blanco por defecto
+    btn.style.color = "black";
+  }
+
+  // Mostrar popup
+  promptDiv.style.display = "block";
+
+  // Al hacer clic en instalar
+  document.getElementById("installAction").onclick = async () => {
+    promptDiv.style.display = "none";
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") {
+      console.log("Instalación aceptada");
+    }
+    deferredPrompt = null;
+  };
+});
+</script>
+
+<div class="social-bar" style="position: fixed; right: 10px; top: 40%; transform: translateY(-50%); z-index: 10; display: flex; flex-direction: column; gap: 10px;">
+<a href="https://www.facebook.com/profile.php?id=100077654137848" target="_blank"><img height="50" src="https://i.postimg.cc/8kfCdqnt/facebook.png" width="50"/></a>
+<a href="https://youtube.com/@radiopasion" target="_blank"><img height="50" src="https://i.postimg.cc/8z59MVZC/youtube.png" width="50"/></a>
+<a href="https://wa.me/56977974306" target="_blank"><img height="50" src="https://i.postimg.cc/1zFWrRwy/whatsapp.png" width="50"/></a>
+<a href="https://www.tiktok.com/@luisriquelme85?_t=ZM-8ysk4fhrkyG&_r=1" target="_blank"><img height="50" src="https://i.postimg.cc/c1FcYt2Q/tiktok.png" width="50"/></a>
+<a href="https://t.me/radiopasion" target="_blank"><img height="50" src="https://i.postimg.cc/wvLjzNNn/telegram-icon-free-png.png" width="50"/></a>
+</div>
+<div id="caratula-blur-top" style="position: fixed; top: 0; left: 0; width: 100vw; height: 250px;background-size: cover; background-position: center;backdrop-filter: blur(14px); z-index: 1; display: none;"></div>
+<div class="overlay-bottom"></div><div id="fondo-amarillo-dinamico" style="position: fixed; top: 40vh; left: 0; width: 100vw; height: 60vh;  background: rgba(255, 255, 0, 0.3); z-index: -2; display: none; background-size: cover; background-position: center; backdrop-filter: blur(6px); position: fixed; background-blend-mode: overlay; background-color: rgba(255,255,0,0.35);"></div>
+<!-- Overlay con animación de corazones múltiples y degradado -->
+<div class="video-overlay">
+<div class="hearts-container">
+<span style="left:0%; animation-delay:0.0s;"><svg fill="#ff0000" height="30" style="" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 0v12.5A2.5 2.5 0 1 1 7 10h.5V0H9z"></path>
+</svg></span>
+<span style="left:6%; animation-delay:0.4s;"><svg fill="#ff0000" height="34" style="" viewbox="0 0 24 24" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 19V6l11-2v13a3 3 0 1 1-2-2.83V8l-7 1v10a3 3 0 1 1-2-2.83z"></path>
+</svg></span>
+<span style="left:12%; animation-delay:0.8s;"><svg fill="#ff0000" height="32" style="" viewbox="0 0 64 64" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 52a8 8 0 1 1 7-11.73V12l28-8v30a8 8 0 1 1-2-5.28V8.77L23 16v25.27A8 8 0 0 1 16 52z"></path>
+</svg></span>
+<span style="left:18%; animation-delay:1.2000000000000002s;"><svg fill="#ff0000" height="30" style="" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 0v12.5A2.5 2.5 0 1 1 7 10h.5V0H9z"></path>
+</svg></span>
+<span style="left:24%; animation-delay:1.6s;"><svg fill="#ff0000" height="34" style="" viewbox="0 0 24 24" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 19V6l11-2v13a3 3 0 1 1-2-2.83V8l-7 1v10a3 3 0 1 1-2-2.83z"></path>
+</svg></span>
+<span style="left:30%; animation-delay:2.0s;"><svg fill="#ff0000" height="32" style="" viewbox="0 0 64 64" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 52a8 8 0 1 1 7-11.73V12l28-8v30a8 8 0 1 1-2-5.28V8.77L23 16v25.27A8 8 0 0 1 16 52z"></path>
+</svg></span>
+<span style="left:36%; animation-delay:2.4000000000000004s;"><svg fill="#ff0000" height="30" style="" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 0v12.5A2.5 2.5 0 1 1 7 10h.5V0H9z"></path>
+</svg></span>
+<span style="left:42%; animation-delay:2.8000000000000003s;"><svg fill="#ff0000" height="34" style="" viewbox="0 0 24 24" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 19V6l11-2v13a3 3 0 1 1-2-2.83V8l-7 1v10a3 3 0 1 1-2-2.83z"></path>
+</svg></span>
+<span style="left:48%; animation-delay:3.2s;"><svg fill="#ff0000" height="32" style="" viewbox="0 0 64 64" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 52a8 8 0 1 1 7-11.73V12l28-8v30a8 8 0 1 1-2-5.28V8.77L23 16v25.27A8 8 0 0 1 16 52z"></path>
+</svg></span>
+<span style="left:54%; animation-delay:3.6s;"><svg fill="#ff0000" height="30" style="" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 0v12.5A2.5 2.5 0 1 1 7 10h.5V0H9z"></path>
+</svg></span>
+<span style="left:60%; animation-delay:4.0s;"><svg fill="#ff0000" height="34" style="" viewbox="0 0 24 24" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 19V6l11-2v13a3 3 0 1 1-2-2.83V8l-7 1v10a3 3 0 1 1-2-2.83z"></path>
+</svg></span>
+<span style="left:66%; animation-delay:4.4s;"><svg fill="#ff0000" height="32" style="" viewbox="0 0 64 64" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 52a8 8 0 1 1 7-11.73V12l28-8v30a8 8 0 1 1-2-5.28V8.77L23 16v25.27A8 8 0 0 1 16 52z"></path>
+</svg></span>
+<span style="left:72%; animation-delay:4.800000000000001s;"><svg fill="#ff0000" height="30" style="" viewbox="0 0 16 16" width="30" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 0v12.5A2.5 2.5 0 1 1 7 10h.5V0H9z"></path>
+</svg></span>
+<span style="left:78%; animation-delay:5.2s;"><svg fill="#ff0000" height="34" style="" viewbox="0 0 24 24" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 19V6l11-2v13a3 3 0 1 1-2-2.83V8l-7 1v10a3 3 0 1 1-2-2.83z"></path>
+</svg></span>
+<span style="left:84%; animation-delay:5.6000000000000005s;"><svg fill="#ff0000" height="32" style="" viewbox="0 0 64 64" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 52a8 8 0 1 1 7-11.73V12l28-8v30a8 8 0 1 1-2-5.28V8.77L23 16v25.27A8 8 0 0 1 16 52z"></path>
+</svg></span>
+</div>
+</div>
+<style>
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -2;
+    background: linear-gradient(45deg, rgba(139,0,0,0.95), rgba(255,0,0,0.95));
+    background-size: 200% 200%;
+    animation: gradMove 2s linear infinite;
+}
+
+@keyframes gradMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.hearts-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hearts-container span {
+    position: absolute;
+    bottom: -30px;
+    font-size: 30px;
+    animation: floatHearts 4s linear infinite;
+    opacity: 0.9;
+    
+}
+
+@keyframes floatHearts {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50vh) scale(1.4);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-100vh) scale(1.8);
+        opacity: 0;
+    }
+}
+@keyframes palpitar {0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); }}
+</style>
+<div class="video-bottom" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; z-index: -3; ">
+<video autoplay="" loop="" muted="" style="width: 100%; height: 100%; object-fit: cover;">
+<source src="video_comprimido.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="container">
+<div class="logo" style="position: relative;  z-index: 2; border: 4px solid white;">
+<div class="ondas-circulares">
+<span></span><span></span><span></span>
+</div>
+<img alt="Radio Inca 96.5 FM" id="logo-img" src="https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg"/>
+</div>
+<div class="ecualizador estilo-normal" style="
+    position: absolute;
+    top: 367px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3px;
+    z-index: 6;
+    height: 30px;
+    align-items: flex-end;
+">
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+<div class="barra"></div>
+</div>
+<div class="envivo" style="position: absolute; top: 400px; left: 50%; transform: translateX(-50%); background-color: red; color: white; padding: 5px 15px; font-size: 14px; font-weight: bold; border-radius: 4px; z-index: 4; box-shadow: 0 0 5px black;">EN VIVO</div>
+<h1 style="position: absolute; top: 430px; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; font-weight: bold; z-index: 3; white-space: nowrap; text-align: center;">RADIO BUENOS TIEMPOS</h1>
+<div class="frase-rotativa" style="position: absolute;
+    top: 456px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    z-index: 3;
+    text-align: center;
+    min-height: 1.2em;">
+<span id="frase-texto">TUS MEJORES RECUERDOS</span>
+</div>
+<button class="player-btn" onclick="togglePlay()" style="position: absolute; top: 510px; left: 5%; transform: translateX(0); width: 130px; height: 130px; font-size: 70px; color: red; background: white; border: 4px solid red;">
+<svg fill="red" height="90" viewbox="0 0 24 24" width="90" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 5v14l11-7z"></path>
+</svg>
+</button>
+<div class="now-playing" id="song-title" style="visibility:hidden; height:0; overflow:hidden;">
+      Cargando canción...
+    </div>
+</div>
+<script>
+let isPlaying = false;
+function accentColor(){ try { return (typeof currentRadio !== 'undefined' && currentRadio === 1) ? '#00087A' : 'red'; } catch(e){ return 'red'; } }
+
+const btn = document.querySelector('.player-btn');
+const audio = document.getElementById('radio');
+const ecualizador = document.querySelector('.ecualizador');
+
+function togglePlay() {
+  if (!audio) {
+    alert('No se encontró el reproductor de audio.');
+    return;
+  }
+
+  if (isPlaying) {
+    audio.pause();
+    ecualizador.classList.remove("active");
+    btn.style.borderColor = accentColor();
+btn.innerHTML = `
+<svg width="90" height="90" viewBox="0 0 24 24" fill="${accentColor()}" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 5v14l11-7z"/>
+</svg>`;
+    document.getElementById('logo-img').src = 'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg';
+      isPlaying = false;
+  } else {
+    btn.disabled = true;
+    btn.style.borderColor = accentColor();
+btn.innerHTML = `
+<svg width="90" height="90" viewBox="0 0 24 24" fill="${accentColor()}" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 5v14l11-7z"/>
+</svg>`;
+    audio.load();
+    audio.play().then(() => {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: (typeof titulo !== 'undefined' && titulo) ? titulo : "RADIO BUENOS TIEMPOS",
+          artist: "RADIO BUENOS TIEMPOS",
+          album: "En Vivo",
+          artwork: [
+            { src: (typeof caratula !== 'undefined' && caratula) ? caratula : "https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg", sizes: "300x300", type: "image/jpeg" }
+          ]
+        });
+      }
+      ecualizador.classList.add("active");
+      btn.disabled = false;
+      btn.style.borderColor = accentColor();
+btn.innerHTML = `
+<svg width="90" height="90" viewBox="0 0 24 24" fill="${accentColor()}" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 5h4v14H6zm8 0h4v14h-4z"/>
+</svg>`;
+      if (typeof caratula !== 'undefined' && caratula) {
+        document.getElementById('logo-img').src = caratula;
+      } else {
+        document.getElementById('logo-img').src = 'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg';
+      }
+      isPlaying = true;
+    }).catch(err => {
+      console.error('Error al reproducir:', err);
+      btn.disabled = false;
+      btn.innerHTML = "&#9658;";
+      alert("Toca para activar el sonido");
+    });
+  }
+}
+</script>
+<div id="metadata" style="position: fixed; bottom: 80px; left: 0px; background: #8B0000; color: white; font-weight: bold; padding: 5px 10px; font-size: 17px; text-align: left; white-space: nowrap; overflow: hidden; width: 55vw; border-radius: 0 6px 6px 0; z-index: 10;"><div style="font-size: 13px; font-weight: bold; color: white; margin-bottom: 4px;">TOCANDO AHORA</div><span id="metadata-text" style="display: inline-block;  min-width: 100%;  animation: scroll-left 12s linear infinite; ; color: white">RADIO BUENOS TIEMPOS - Suena bien</span></div>
+<script>
+let deferredPrompt;
+const popup = document.getElementById("install-popup");
+const installBtnPopup = document.getElementById("install-btn-popup");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  popup.style.display = "block";
+
+  installBtnPopup.addEventListener("click", async () => {
+    popup.style.display = "none";
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      console.log("App instalada");
+    }
+    deferredPrompt = null;
+  });
+});
+</script>
+<script>
+window.frases = ["TUS MEJORES RECUERDOS", "EN ESPAÑOL"];
+window.i = 0;
+setInterval(() => {
+  document.getElementById("frase-texto").textContent = window.frases[i];
+  i = (i + 1) % frases.length;
+}, 3000);
+</script><script>
+setTimeout(function() {
+  
+
+
+  const fondoAmarillo = document.getElementById("fondo-amarillo-dinamico");
+  if (caratula && fondoAmarillo) {
+    fondoAmarillo.style.display = "block";
+  } else if (fondoAmarillo) {
+    fondoAmarillo.style.display = "none";
+  }
+
+  if (caratula && fondoAmarillo) {
+    fondoAmarillo.style.backgroundImage = `url(${caratula})`;
+    fondoAmarillo.style.display = "block";
+  } else if (fondoAmarillo) {
+    fondoAmarillo.style.display = "none";
+    fondoAmarillo.style.backgroundImage = "";
+  }
+
+}, 5000);
+</script>
+<!-- Botón de compartir nativo -->
+<button id="shareBtn" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 99999;
+">
+<svg fill="white" height="40" viewbox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+<path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a2.48 2.48 0 000-1.39l7.13-4.19a2.5 2.5 0 10-.99-1.96c0 .34.07.67.19.97L8.2 10.96a2.5 2.5 0 100 3.09l7.06 4.07c-.11.28-.18.58-.18.89a2.5 2.5 0 102.5-2.5z"></path>
+</svg>
+</button>
+<script>
+  document.getElementById("shareBtn").addEventListener("click", async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "RADIO BUENOS TIEMPOS - Suena Bien",
+          text: "Escucha RADIO BUENOS TIEMPOS en vivo",
+          url: window.location.href
+        });
+      } catch (error) {
+        console.error("Error al compartir:", error);
+      }
+    } else {
+      alert("Tu navegador no soporta la función de compartir nativa.");
+    }
+  });
+</script>
+<!-- El botón para abrir el menú lateral -->
+<!-- Menú lateral con botones en la posición correcta -->
+<!-- Modal de Políticas de Privacidad -->
+<div id="politicasModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); color:white; z-index:10000; overflow-y:auto; padding:40px 20px; box-sizing:border-box;">
+<span onclick="document.getElementById('politicasModal').style.display='none'" style="position:absolute; top:20px; right:30px; font-size:36px; cursor:pointer; color:white;">×</span>
+<h2 style="margin-top:20px;">Políticas de Privacidad – PERÚ STREAMING</h2>
+<p><strong>Última actualización:</strong> 7 de agosto de 2025</p>
+<p>En <strong>PERÚ STREAMING</strong> valoramos la privacidad de nuestros usuarios y nos comprometemos a proteger la información personal que nos proporcionan. Esta Política de Privacidad describe cómo recopilamos, usamos y protegemos sus datos cuando interactúa con nuestros servicios.</p>
+<h3>1. Información que recopilamos</h3>
+<ul>
+<li>Datos de contacto (como nombre, correo electrónico y número de teléfono).</li>
+<li>Información técnica (como dirección IP, tipo de dispositivo y sistema operativo).</li>
+<li>Estadísticas de uso (como preferencias de contenido, tiempo de conexión, etc.).</li>
+</ul>
+<h3>2. Uso de la información</h3>
+<ul>
+<li>Brindar una mejor experiencia en nuestras plataformas.</li>
+<li>Mejorar nuestros servicios de streaming y soporte técnico.</li>
+<li>Enviar notificaciones importantes, promociones o actualizaciones.</li>
+<li>Cumplir con obligaciones legales y de seguridad.</li>
+</ul>
+<h3>3. Protección de datos</h3>
+<p>Implementamos medidas de seguridad físicas, electrónicas y administrativas para proteger sus datos contra accesos no autorizados, uso indebido o divulgación.</p>
+<h3>4. Compartir información</h3>
+<p><strong>PERÚ STREAMING</strong> no vende ni alquila su información personal a terceros. Solo compartiremos sus datos cuando sea necesario para cumplir con requisitos legales o colaborar con proveedores tecnológicos bajo acuerdos de confidencialidad.</p>
+<h3>5. Derechos del usuario</h3>
+<p>Usted tiene derecho a acceder, corregir o eliminar su información, y a retirar su consentimiento para el uso de datos.</p>
+<p>Puede ejercer estos derechos escribiendo a:<br/>
+  📧 <strong>perustreamingoficial@gmail.com</strong><br/>
+  📱 <strong>+51 993 111 446</strong></p>
+<h3>6. Cookies</h3>
+<p>Podemos utilizar cookies para mejorar su experiencia en nuestras plataformas. Usted puede configurar su navegador para bloquearlas si lo desea.</p>
+<h3>7. Cambios a esta política</h3>
+<p>Nos reservamos el derecho de modificar esta Política de Privacidad. Cualquier cambio será informado a través de nuestros canales oficiales.</p>
+<h3>8. Contacto</h3>
+<p>Para cualquier duda o consulta sobre esta política, contáctenos:<br/>
+  📧 <strong>perustreamingoficial@gmail.com</strong><br/>
+  📱 <strong>+51 993 111 446</strong></p>
+</div>
+<script>
+async function actualizarMetadata() {
+  try {
+    const res = await fetch("https://free.miradio.pro/icy?url=https://sonic.mallocohosting.cl/8054/stream");
+    const data = await res.json();
+
+    // Actualizar texto en la barra verde
+    if (data.songtitle) {
+      document.getElementById("metadata-text").textContent = data.songtitle;
+    }
+
+    // Guardar datos para MediaSession
+    window.titulo = data.songtitle || "";
+    window.caratula = data.artwork?.large || "";
+
+    // Cambiar imagen de logo si existe carátula
+    if (data.artwork?.large) {
+      if (isPlaying) { document.getElementById('logo-img').src = data.artwork.large; }
+    }
+
+    // Cambiar fondo amarillo si existe carátula
+    const fondoAmarillo = document.getElementById("fondo-amarillo-dinamico");
+    if (data.artwork?.large) {
+      fondoAmarillo.style.backgroundImage = `url(${data.artwork.large})`;
+      fondoAmarillo.style.display = "block";
+    if (isPlaying) {
+      document.getElementById('logo-img').src = data.artwork.large;
+    }
+    } else {
+      fondoAmarillo.style.display = "none";
+    document.getElementById('logo-img').src = 'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg';
+    document.getElementById('logo-img').src = 'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg';
+    }
+  } catch (err) {
+    console.error("Error obteniendo metadata:", err);
+  }
+}
+
+
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const installBtn = document.getElementById("installBtn");
+  if (/android/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android"> Instalar en tu Android';
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"> Instalar en tu iPhone';
+  } else {
+    installBtn.innerHTML = 'Instalar aplicación';
+  }
+
+  // Ocultar el contenedor al pulsar el botón
+  installBtn.addEventListener("click", () => {
+    document.getElementById("installContainer").style.display = "none";
+  });
+});
+</script>
+<!-- Controles de música -->
+<div style="position: fixed; top: 680px; right: 70px; display: flex; align-items: center; gap: 10px; z-index: 1000;">
+<button style="background: rgba(0,0,0,0.5); border: none; border-radius: 50%; width: 50px; height: 50px; color: white; font-size: 22px; cursor: pointer;">
+<i class="fas fa-backward"></i>
+</button>
+<button id="volumeBtn" style="background: rgba(0,0,0,0.5); border: none; border-radius: 50%; width: 50px; height: 50px; color: white; font-size: 22px; cursor: pointer;">
+<i class="fas fa-volume-up" id="volumeIcon"></i>
+</button>
+<button style="background: rgba(0,0,0,0.5); border: none; border-radius: 50%; width: 50px; height: 50px; color: white; font-size: 22px; cursor: pointer;">
+<i class="fas fa-forward"></i>
+</button>
+</div>
+<script>
+document.getElementById("volumeBtn").addEventListener("click", function() {
+    const audio = document.getElementById("radio");
+    const icon = document.getElementById("volumeIcon");
+    audio.muted = !audio.muted;
+    if (audio.muted) {
+        icon.classList.remove("fa-volume-up");
+        icon.classList.add("fa-volume-mute");
+    } else {
+        icon.classList.remove("fa-volume-mute");
+        icon.classList.add("fa-volume-up");
+    }
+});
+</script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const installBtn = document.getElementById("installBtn");
+  if (/android/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android"> Instalar en tu Android';
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"> Instalar en tu iPhone';
+  } else {
+    installBtn.innerHTML = 'Instalar aplicación';
+  }
+
+  // Ocultar el contenedor al pulsar el botón
+  installBtn.addEventListener("click", () => {
+    document.getElementById("installContainer").style.display = "none";
+  });
+});
+}
+});
+</script>
+<script>
+
+let radios = [
+  {
+    stream: "https://sonic.mallocohosting.cl/8054/stream",
+    frases: ["TUS MEJORES RECUERDOS", "EN INGLÉS"],
+    metadataUrl: "https://free.miradio.pro/icy?url=https://sonic.mallocohosting.cl/8054/stream",
+    fondo: "https://i.postimg.cc/pX3Mwkt9/Picsart-25-08-14-11-53-13-420.png"
+  },
+  {
+    stream: "https://sonic.mallocohosting.cl/8068/stream",
+    frases: ["TUS RECUERDOS", "EN INGLÉS"],
+    metadataUrl: "https://free.miradio.pro/icy?url=https://sonic.mallocohosting.cl/8068/stream",
+    fondo: "https://i.postimg.cc/QMTVTSp1/Picsart-25-08-14-14-24-24-610.png"
+  }
+];
+
+let currentRadio = 0;
+let metadataInterval = null;
+
+const btnBack = document.querySelector('button i.fas.fa-backward').parentElement;
+const btnNext = document.querySelector('button i.fas.fa-forward').parentElement;
+
+function actualizarBotones(index) {
+  // Botón Atrás
+  if (index === 0) {
+    btnBack.disabled = true;
+    btnBack.style.opacity = '0.5';
+    btnBack.style.cursor = 'not-allowed';
+  } else {
+    btnBack.disabled = false;
+    btnBack.style.opacity = '1';
+    btnBack.style.cursor = 'pointer';
+  }
+
+  // Botón Siguiente
+  if (index === radios.length - 1) {
+    btnNext.disabled = true;
+    btnNext.style.opacity = '0.5';
+    btnNext.style.cursor = 'not-allowed';
+  } else {
+    btnNext.disabled = false;
+    btnNext.style.opacity = '1';
+    btnNext.style.cursor = 'pointer';
+  }
+}
+
+
+btnBack.addEventListener('click', () => {
+  currentRadio = (currentRadio - 1 + radios.length) % radios.length;
+  cambiarRadio(currentRadio);
+});
+
+btnNext.addEventListener('click', () => {
+  currentRadio = (currentRadio + 1) % radios.length;
+  cambiarRadio(currentRadio);
+});
+
+
+let rotadorInterval = null;
+function iniciarRotador() {
+  if (rotadorInterval) clearInterval(rotadorInterval);
+  let i = 0;
+  document.getElementById("frase-texto").textContent = window.frases[i];
+  rotadorInterval = setInterval(() => {
+    i = (i + 1) % window.frases.length;
+    document.getElementById("frase-texto").textContent = window.frases[i];
+  }, 3000);
+}
+
+function cambiarRadio(index) {
+  // Actualizar texto rotativo inmediatamente según emisora
+  const textoRotativo = document.getElementById('texto-rotativo');
+  if (textoRotativo) {
+    if (index === 0) {
+      textoRotativo.textContent = "Escucha la mejor música del recuerdo aquí";
+    } else if (index === 1) {
+      textoRotativo.textContent = "Listen to the best music from the past here";
+    }
+  }
+  // Cambiar theme-color según emisora
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  const botonesContainer = document.querySelector('.botones-container-original');
+  if (index === 0) {
+    if (themeMeta) themeMeta.setAttribute('content', 'red');
+    if (botonesContainer) botonesContainer.style.backgroundColor = 'red';
+  } else if (index === 1) {
+    if (themeMeta) themeMeta.setAttribute('content', '#00087A');
+    if (botonesContainer) botonesContainer.style.backgroundColor = '#00087A';
+  }
+  actualizarBotones(index);
+  if (index === 0) { // rojo
+  window.frases = ["TU MÚSICA DEL RECUERDO", "EN ESPAÑOL"]; } else if (index === 1) { // azul
+  window.frases = ["TU MÚSICA DEL RECUERDO", "IN ENGLISH"]; }
+  window.i = 0;
+  document.getElementById("frase-texto").textContent = window.frases[0];
+
+  // Cambiar frases según la radio seleccionada
+  if (index === 0) { // rojo
+  window.frases = ["TU MÚSICA DEL RECUERDO", "EN ESPAÑOL"]; } else if (index === 1) { // azul
+  window.frases = ["TU MÚSICA DEL RECUERDO", "IN ENGLISH"]; }
+  // Reiniciar texto mostrado
+  i = 0;
+  document.getElementById("frase-texto").textContent = window.frases[i];
+
+  // --- CAMBIO DE COLORES SEGÚN RADIO ---
+  const allElements = document.querySelectorAll('*');
+  allElements.forEach(el => {
+    const computed = window.getComputedStyle(el);
+
+    if (index === 1) { // segunda → azul
+      if (computed.color === 'rgb(255, 0, 0)') el.style.color = '#00087A';
+      if (computed.backgroundColor === 'rgb(255, 0, 0)') el.style.backgroundColor = '#00087A';
+      if (computed.borderColor === 'rgb(255, 0, 0)') el.style.borderColor = '#00087A';
+    } else { // primera → rojo
+      if (computed.color === 'rgb(0, 8, 122)') el.style.color = 'red';
+      if (computed.backgroundColor === 'rgb(0, 8, 122)') el.style.backgroundColor = 'red';
+      if (computed.borderColor === 'rgb(0, 8, 122)') el.style.borderColor = 'red';
+    }
+
+    // Cambiar colores de SVG y paths
+    if (el.tagName.toLowerCase() === 'svg' || el.tagName.toLowerCase() === 'path') {
+      if (index === 1) {
+        if (el.getAttribute('fill') === 'red' || el.getAttribute('fill') === '#ff0000') {
+          el.setAttribute('fill', '#00087A');
+        }
+      } else {
+        if (el.getAttribute('fill') === '#00087A') {
+          el.setAttribute('fill', 'red');
+        }
+      }
+    }
+  });
+
+  // Botón EN VIVO
+  const envivo = document.querySelector('.envivo');
+  if (envivo) envivo.style.backgroundColor = index === 1 ? '#00087A' : 'red';
+
+  // Botón play/pausa borde y svg
+  const btnPlayer = document.querySelector('.player-btn');
+  if (btnPlayer) {
+    btnPlayer.style.borderColor = index === 1 ? '#00087A' : 'red';
+    btnPlayer.querySelectorAll('svg').forEach(svg => {
+      svg.setAttribute('fill', index === 1 ? '#00087A' : 'red');
+    });
+  }
+
+  // Notas musicales flotantes
+  document.querySelectorAll('.hearts-container svg').forEach(svg => {
+    if (index === 1) {
+      svg.setAttribute('fill', '#00087A');
+      svg.style.filter = 'drop-shadow(0 0 5px rgba(0,8,122,0.8))';
+    } else {
+      svg.setAttribute('fill', '#ff0000');
+      svg.style.filter = 'drop-shadow(0 0 5px rgba(255,0,0,0.8))';
+    }
+  });
+
+  // Barra metadata
+  const metadataBar = document.getElementById("metadata");
+  if (metadataBar) metadataBar.style.background = index === 1 ? '#00087A' : '#8B0000';
+  // Forzar que el ícono de play/pausa se vea azul o rojo según radio
+  const btnPlayIcon = document.querySelector('.player-btn');
+  if (btnPlayIcon && !isPlaying) { // solo si está en estado play
+    btnPlayIcon.innerHTML = `
+<svg width="90" height="90" viewBox="0 0 24 24" fill="${index === 1 ? '#00087A' : 'red'}" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 5v14l11-7z"/>
+</svg>`;
+  }
+
+
+  // Cambiar fondo superior según emisora
+  const fondoDiv = document.querySelector('.fondo-imagen-diagonal');
+  if (fondoDiv && radios[index].fondo) {
+    fondoDiv.style.background = `url('${radios[index].fondo}') no-repeat center -125px`;
+    fondoDiv.style.backgroundSize = "cover";
+  }
+
+  // Cambiar colores de fondo animado inferior
+  const videoOverlay = document.querySelector('.video-overlay');
+  if (videoOverlay) {
+    if (index === 1) { // segunda radio
+      videoOverlay.style.background = "linear-gradient(45deg, #00087A, #0040ff)";
+    } else {
+  // Cambiar todos los elementos rojos a azul en segunda radio
+  const redElements = document.querySelectorAll('*');
+  redElements.forEach(el => {
+    const computed = window.getComputedStyle(el);
+    // Detectar elementos con color rojo y cambiar
+    if (index === 1) {
+      if (computed.color === 'rgb(255, 0, 0)') el.style.color = '#00087A';
+      if (computed.backgroundColor === 'rgb(255, 0, 0)') el.style.backgroundColor = '#00087A';
+      if (computed.borderColor === 'rgb(255, 0, 0)') el.style.borderColor = '#00087A';
+      if (el.tagName.toLowerCase() === 'svg' || el.tagName.toLowerCase() === 'path') {
+        if (el.getAttribute('fill') === 'red' || el.getAttribute('fill') === '#ff0000') {
+          el.setAttribute('fill', '#00087A');
+        }
+      }
+    } else {
+      if (computed.color === 'rgb(0, 8, 122)') el.style.color = 'red';
+      if (computed.backgroundColor === 'rgb(0, 8, 122)') el.style.backgroundColor = 'red';
+      if (computed.borderColor === 'rgb(0, 8, 122)') el.style.borderColor = 'red';
+      if (el.tagName.toLowerCase() === 'svg' || el.tagName.toLowerCase() === 'path') {
+        if (el.getAttribute('fill') === '#00087A') {
+          el.setAttribute('fill', 'red');
+        }
+      }
+    }
+  });
+ // primera radio
+      videoOverlay.style.background = "linear-gradient(45deg, rgba(139,0,0,0.95), rgba(255,0,0,0.95))";
+    }
+  }
+
+  const audio = document.getElementById("radio");
+  const ecualizador = document.querySelector('.ecualizador');
+  const btn = document.querySelector('.player-btn');
+
+  audio.src = radios[index].stream;
+  audio.load();
+  if (isPlaying) {
+    audio.play();
+    ecualizador.classList.add("active");
+    btn.style.borderColor = accentColor();
+btn.innerHTML = `
+<svg width="90" height="90" viewBox="0 0 24 24" fill="${accentColor()}" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 5h4v14H6zm8 0h4v14h-4z"/>
+</svg>`;
+  }
+
+  // Cambiar frases
+  window.frases = radios[index].frases;
+  document.getElementById("frase-texto").textContent = window.frases[0];
+  iniciarRotador(); // Mostrar inmediatamente
+
+  // Reiniciar intervalo de metadata para la nueva radio
+  if (metadataInterval) clearInterval(metadataInterval);
+  actualizarMetadataPersonalizado(radios[index].metadataUrl);
+  metadataInterval = setInterval(() => {
+    actualizarMetadataPersonalizado(radios[index].metadataUrl);
+  }, 10000);
+}
+
+async function actualizarMetadataPersonalizado(url) {
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.songtitle) {
+      document.getElementById("metadata-text").textContent = data.songtitle;
+    }
+
+    window.titulo = data.songtitle || "";
+    window.caratula = data.artwork?.large || "";
+
+    if (data.artwork?.large) {
+      if (isPlaying) { document.getElementById('logo-img').src = data.artwork.large; }
+      const fondoAmarillo = document.getElementById("fondo-amarillo-dinamico");
+      fondoAmarillo.style.backgroundImage = `url(${data.artwork.large})`;
+      fondoAmarillo.style.display = "block";
+    } else {
+      const fondoAmarillo = document.getElementById("fondo-amarillo-dinamico");
+      fondoAmarillo.style.display = "none";
+    document.getElementById('logo-img').src = 'https://i.postimg.cc/9ft0sz5B/logo-1200x1200.jpg';
+    }
+  } catch (err) {
+    console.error("Error obteniendo metadata:", err);
+  }
+}
+
+// Iniciar metadata para la radio inicial
+metadataInterval = setInterval(() => {
+  actualizarMetadataPersonalizado(radios[currentRadio].metadataUrl);
+actualizarBotones(currentRadio);
+}, 10000);
+actualizarMetadataPersonalizado(radios[currentRadio].metadataUrl);
+actualizarBotones(currentRadio);
+</script>
+<script>
+  const audio2 = document.getElementById("radio");
+  const videoFondo = document.querySelector('.video-bottom');
+  const logo = document.querySelector('.logo');
+
+  // Ocultar video al inicio
+  if(videoFondo) videoFondo.style.display = 'none';
+
+  // Cuando empiece a sonar la radio
+  audio2.addEventListener('playing', () => {
+    if(videoFondo) videoFondo.style.display = 'block';
+    if(logo) logo.style.display = 'block'; // mantener logo visible siempre
+  });
+
+  // Cuando se pausa o cambia de emisora
+  audio2.addEventListener('pause', () => {
+    if(videoFondo) videoFondo.style.display = 'none';
+    if(logo) logo.style.display = 'block';
+  });
+
+  // Función para cambiar emisora
+  function cambiarEmisora(nuevaURL) {
+    if(audio2) {
+      audio2.pause();
+      if(videoFondo) videoFondo.style.display = 'none';
+      if(logo) logo.style.display = 'block';
+      audio2.src = nuevaURL;
+      audio2.play();
+    }
+  }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const installBtn = document.getElementById("installBtn");
+  if (/android/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android"> Instalar en tu Android';
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installBtn.innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple"> Instalar en tu iPhone';
+  } else {
+    installBtn.innerHTML = 'Instalar aplicación';
+  }
+
+  // Ocultar el contenedor al pulsar el botón
+  installBtn.addEventListener("click", () => {
+    document.getElementById("installContainer").style.display = "none";
+  });
+});
+</script>
+<!-- Menú lateral nuevo -->
+
+
+
+
+<script>
+// Guardar índice actual de la radio seleccionada
+function guardarRadioIndex(index) {
+  localStorage.setItem('radioIndex', index);
+}
+
+// Cargar frases correctas según la radio
+function cargarTextoRotativoSegunRadio() {
+  const index = parseInt(localStorage.getItem('radioIndex') || '0', 10);
+  if (index === 0) { // rojo
+  window.frases = ["TU MÚSICA DEL RECUERDO", "EN ESPAÑOL"]; } else {
+    window.frases = ["TUS MOMENTOS", "EN INGLÉS"];
+  }
+  window.i = 0;
+  if (document.getElementById("frase-texto")) {
+    document.getElementById("frase-texto").textContent = window.frases[0];
+  }
+}
+
+// Ejecutar también al cargar DOM para asegurar inicio correcto
+document.addEventListener('DOMContentLoaded', cargarTextoRotativoSegunRadio);
+
+// Evento que se ejecuta al volver atrás o cargar la página
+window.addEventListener('pageshow', cargarTextoRotativoSegunRadio);
+
+// Modificar función cambiarRadio para guardar el índice y frases correctas
+if (typeof cambiarRadio === 'function') {
+  const cambiarRadioOriginal = cambiarRadio;
+  cambiarRadio = function(index) {
+    guardarRadioIndex(index);
+    cambiarRadioOriginal(index);
+    cargarTextoRotativoSegunRadio();
+  };
+}
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const installBtn = document.querySelector("#installContainer #installBtn");
+  if (!installBtn) return;
+
+  const ua = navigator.userAgent.toLowerCase();
+  if (/android/i.test(ua)) {
+    installBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height:20px;vertical-align:middle;"><path fill="#3ddc84" d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256 256-114.6 256-256S397.4 0 256 0zM154.9 387.4c-18.6 0-33.7-15.1-33.7-33.7V222.2c0-18.6 15.1-33.7 33.7-33.7s33.7 15.1 33.7 33.7v131.5c0 18.6-15.1 33.7-33.7 33.7zm101.1 0c-18.6 0-33.7-15.1-33.7-33.7V222.2c0-18.6 15.1-33.7 33.7-33.7s33.7 15.1 33.7 33.7v131.5c0 18.6-15.1 33.7-33.7 33.7zm101.1 0c-18.6 0-33.7-15.1-33.7-33.7V222.2c0-18.6 15.1-33.7 33.7-33.7s33.7 15.1 33.7 33.7v131.5c0 18.6-15.1 33.7-33.7 33.7z"/></svg> Instalar en tu Android';
+  } else if (/iphone|ipad|ipod/i.test(ua)) {
+    installBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" style="height:20px;vertical-align:middle;"><path fill="#000" d="M318.7 268.7c-.1-36.4 16-64.1 50.3-84.4-19-27.6-47.9-42.5-84.6-44.9-35.7-2.3-74.5 20.9-88.1 20.9-14 0-46.3-20.2-71.6-19.6-37.1 1.1-68.1 21.5-86.5 54.5-37.1 64.4-9.5 159.7 26.6 212.1 17.7 25.8 38.8 54.7 66.5 53.6 26.5-1 36.6-17.1 68.7-17.1 31.8 0 40.7 17.1 68.7 16.6 28.5-.5 46.6-26.1 63.9-51.9 20.2-29.5 28.5-58.1 28.8-59.6-.6-.2-55.2-21.1-55.3-84.2zM246.4 85.8c14.7-17.6 24.6-42.1 21.9-66.6-21.2.9-46.7 14.1-61.7 31.7-13.6 15.6-25.5 40.6-22.3 64.6 23.7 1.8 47.4-12 62.1-29.7z"/></svg> Instalar en tu iPhone';
+  } else if (/windows/i.test(ua)) {
+    installBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="height:20px;vertical-align:middle;"><path fill="#00adef" d="M0 93.7l183.6-25.3v177.1H0V93.7zm0 324.6l183.6 25.3V266.4H0v151.9zM204.2 71.2l243.8-33.5v208H204.2V71.2zm0 369.6l243.8 33.5v-208H204.2v174.5z"/></svg> Instalar en tu Windows';
+  } else {
+    installBtn.textContent = 'Instalar aplicación';
+  }
+});
+</script>
+
+
+<script>
+function ajustarEscala() {
+  const anchoBase = 430; // ancho base del diseño original
+  const altoBase = 932;  // alto base del diseño original
+  const escalaX = window.innerWidth / anchoBase;
+  const escalaY = window.innerHeight / altoBase;
+  const escala = Math.min(escalaX, escalaY);
+  const contenedor = document.querySelector('.container');
+  if (contenedor) {
+    contenedor.style.transform = `scale(${escala})`;
+    contenedor.style.transformOrigin = 'top center';
+    contenedor.style.margin = '0 auto';
+  }
+}
+window.addEventListener('resize', ajustarEscala);
+window.addEventListener('load', ajustarEscala);
+</script>
+
+</body>
+</html>
