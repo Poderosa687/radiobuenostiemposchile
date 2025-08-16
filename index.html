@@ -740,7 +740,100 @@ html, body {
 "></div>
 
 
+<!-- POPUP DE INSTALACIÓN ADAPTATIVO -->
+<div id="installPrompt" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  z-index: 10000;
+  display: none;
+">
+  <h3 style="margin-bottom: 10px;">Instala Nuestra Aplicación</h3>
+  <p style="font-size: 14px; line-height: 1.5;">
+    Disfruta nuestra radio directamente en tu dispositivo, sin necesidad de abrir el navegador.
+  </p>
+  <button id="installAction" style="
+    margin-top: 15px;
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  ">
+    <img id="installIcon" src="" alt="icon" style="height: 20px; width: 20px;"> 
+    <span id="installText"></span>
+  </button>
+</div>
 
+<script>
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const promptDiv = document.getElementById("installPrompt");
+  const installText = document.getElementById("installText");
+  const installIcon = document.getElementById("installIcon");
+
+  // Detectar dispositivo y cambiar texto/icono
+  if (/android/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Android";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg";
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en iPhone";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg";
+  } else if (/windows/i.test(navigator.userAgent)) {
+    installText.textContent = "Instalar en Windows";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg";
+  } else {
+    installText.textContent = "Instalar Aplicación";
+    installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/6/6a/Chrome_Logo.svg";
+  }
+
+  // Cambiar color de botón según dispositivo
+  const btn = document.getElementById("installAction");
+  if (/android/i.test(navigator.userAgent)) {
+    btn.style.background = "#3ddc84"; // Verde Android
+    btn.style.color = "white";
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    btn.style.background = "#000000"; // Negro Apple
+    btn.style.color = "white";
+  } else if (/windows/i.test(navigator.userAgent)) {
+    btn.style.background = "#0078d7"; // Azul Windows
+    btn.style.color = "white";
+  } else {
+    btn.style.background = "#ffffff"; // Blanco por defecto
+    btn.style.color = "black";
+  }
+
+  // Mostrar popup
+  promptDiv.style.display = "block";
+
+  // Al hacer clic en instalar
+  document.getElementById("installAction").onclick = async () => {
+    promptDiv.style.display = "none";
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") {
+      console.log("Instalación aceptada");
+    }
+    deferredPrompt = null;
+  };
+});
+</script>
 
 <div class="social-bar" style="position: fixed; right: 10px; top: 40%; transform: translateY(-50%); z-index: 10; display: flex; flex-direction: column; gap: 10px;">
 <a href="https://www.facebook.com/profile.php?id=100077654137848" target="_blank"><img height="50" src="https://i.postimg.cc/8kfCdqnt/facebook.png" width="50"/></a>
@@ -920,7 +1013,7 @@ html, body {
     z-index: 3;
     text-align: center;
     min-height: 1.2em;">
-<span id="frase-texto"></span>
+<span id="frase-texto">TUS MEJORES RECUERDOS</span>
 </div>
 <button class="player-btn" onclick="togglePlay()" style="position: absolute; top: 510px; left: 5%; transform: translateX(0); width: 130px; height: 130px; font-size: 70px; color: red; background: white; border: 4px solid red;">
 <svg fill="red" height="90" viewbox="0 0 24 24" width="90" xmlns="http://www.w3.org/2000/svg">
@@ -1067,7 +1160,7 @@ setTimeout(function() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "RADIO BUENOS TIEMPOS - ONLINE",
+          title: "RADIO BUENOS TIEMPOS - Suena Bien",
           text: "Escucha RADIO BUENOS TIEMPOS en vivo",
           url: window.location.href
         });
@@ -1227,7 +1320,7 @@ document.addEventListener("DOMContentLoaded", () => {
 let radios = [
   {
     stream: "https://sonic.mallocohosting.cl/8054/stream",
-    frases: ["TUS MEJORES RECUERDOS", "EN ESPAÑOL"],
+    frases: ["TUS MEJORES RECUERDOS", "EN INGLÉS"],
     metadataUrl: "https://free.miradio.pro/icy?url=https://sonic.mallocohosting.cl/8054/stream",
     fondo: "https://i.postimg.cc/pX3Mwkt9/Picsart-25-08-14-11-53-13-420.png"
   },
@@ -1628,65 +1721,53 @@ window.addEventListener('load', ajustarEscala);
 </script>
 
 
+<!-- Botón flotante acrílico de instalación -->
+<div id="installContainer">📲 Instalar aplicación</div>
 
-
-<!-- POPUP DE INSTALACIÓN SIEMPRE VISIBLE -->
-<div id="installPrompt" style="
+<style>
+#installContainer {
   position: fixed;
-  top: 50%;
+  bottom: 20px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.85);
-  color: white;
-  padding: 25px;
-  border-radius: 12px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 18px;
+  border-radius: 50px;
   text-align: center;
-  max-width: 350px;
-  width: 90%;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  display: none;
+  cursor: pointer;
   z-index: 10000;
-">
-  
-    <img id="installIcon" src="" alt="icon" style="height: 20px; width: 20px;"> 
-    <span id="installText"></span>
-  </button>
-</div>
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#installContainer:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+</style>
 
 <script>
 let deferredPrompt;
-
-// Detectar dispositivo y cambiar texto/icono
-const installText = document.getElementById("installText");
-const installIcon = document.getElementById("installIcon");
-const installBtn = document.getElementById("installAction");
-
-if (/android/i.test(navigator.userAgent)) {
-  installText.textContent = "Instalar en Android";
-  installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg";
-  installBtn.style.background = "#3ddc84";
-  installBtn.style.color = "white";
-} else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-  installText.textContent = "Instalar en iPhone";
-  installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg";
-  installBtn.style.background = "#000000";
-  installBtn.style.color = "white";
-} else if (/windows/i.test(navigator.userAgent)) {
-  installText.textContent = "Instalar en Windows";
-  installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg";
-  installBtn.style.background = "#0078d7";
-  installBtn.style.color = "white";
-} else {
-  installText.textContent = "Instalar Aplicación";
-  installIcon.src = "https://upload.wikimedia.org/wikipedia/commons/6/6a/Chrome_Logo.svg";
-  installBtn.style.background = "#ffffff";
-  installBtn.style.color = "black";
-}
+const installBtn = document.getElementById("installContainer");
 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
+  installBtn.style.display = "block"; // mostrar botón
+
+  installBtn.addEventListener("click", async () => {
+    installBtn.style.display = "none";
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") {
+      console.log("Instalación aceptada");
+    }
+    deferredPrompt = null;
+  });
 });
-
-
 </script>
 
 </body>
